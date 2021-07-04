@@ -134,6 +134,13 @@ public extension IQKeyboardManager {
             objc_setAssociatedObject(self, &AssociatedKeys.isTextViewContentInsetChanged, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
+    
+    static var bottomSafeAreaHeight: CGFloat {
+        if let window = UIApplication.shared.windows.first {
+            return window.safeAreaInsets.bottom
+        }
+        return 0
+    }
 
     /** To know if we have any pending request to adjust view position. */
     private var hasPendingAdjustRequest: Bool {
@@ -598,7 +605,7 @@ public extension IQKeyboardManager {
                 UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
 
                     var rect = rootController.view.frame
-                    rect.origin = rootViewOrigin
+                    rect.origin = .init(x: rootViewOrigin.x, y: rootViewOrigin.y + IQKeyboardManager.bottomSafeAreaHeight) //rootViewOrigin
                     rootController.view.frame = rect
 
                     //Animating content if needed (Bug ID: #204)
@@ -630,7 +637,7 @@ public extension IQKeyboardManager {
                     UIView.animate(withDuration: animationDuration, delay: 0, options: animationCurve, animations: { () -> Void in
 
                         var rect = rootController.view.frame
-                        rect.origin = rootViewOrigin
+                        rect.origin = .init(x: rootViewOrigin.x, y: rootViewOrigin.y + IQKeyboardManager.bottomSafeAreaHeight) //rootViewOrigin
                         rootController.view.frame = rect
 
                         //Animating content if needed (Bug ID: #204)
